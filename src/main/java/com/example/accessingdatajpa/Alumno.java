@@ -1,9 +1,10 @@
 package com.example.accessingdatajpa;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /************************************************************************
  Made by        PatrickSys
@@ -18,21 +19,33 @@ public class Alumno  {
     private int id;
     private String nombre;
     private int edad;
-
-    protected Alumno() {}
+    @Transient
+    @OneToMany( mappedBy = "alumno")
+    public List<Asignatura> asignaturas;
+    public Alumno() {}
 
     public Alumno(String nombre, int edad) {
         this.nombre = nombre;
         this.edad = edad;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "Alumno[id=%d, nombre='%s', edad='%s']",
-                id, nombre, edad);
+    public List<Asignatura> getAsignaturas() {
+        return asignaturas;
     }
 
+    public void setAsignaturas(List<Asignatura> asignaturas) {
+        this.asignaturas = asignaturas;
+    }
+
+    @Override
+    public String toString() {
+        return "Alumno{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", edad=" + edad +
+                ", asignaturas=" + asignaturas +
+                '}';
+    }
 
     public int getId() {
         return id;

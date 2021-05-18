@@ -1,20 +1,21 @@
 package com.example.accessingdatajpa;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import javax.transaction.Transactional;
+import javax.persistence.*;
 
 /************************************************************************
  Made by        PatrickSys
- Date           12/05/2021
+ Date           18/05/2021
  Package        com.example.accessingdatajpa
  Description:
  ************************************************************************/
-@Transactional
-public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
+@Entity
+public class Asignatura {
+    @Id
+    private int id;
+    public String nombre;
+    public int nota;
 
-
-
+    @ManyToOne
+    private Alumno alumno;
 
 }

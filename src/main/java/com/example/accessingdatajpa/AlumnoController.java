@@ -1,15 +1,20 @@
 package com.example.accessingdatajpa;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.commons.collections.map.MultiValueMap;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import org.apache.catalina.connector.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,14 +44,12 @@ public class AlumnoController {
     }
 
     @PostMapping(path = "/processJson", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> addAlumno(@RequestBody String alumnoJSON) throws UnsupportedEncodingException, JsonProcessingException {
+    public ResponseEntity<Integer> addAlumno(@RequestBody String alumnoJSON) throws UnsupportedEncodingException, JsonProcessingException, JSONException {
 
         String newAlumnoJson = URLDecoder.decode(String.valueOf(alumnoJSON), StandardCharsets.UTF_8.name());
-        //newAlumnoJson = newAlumnoJson.replace("processJson=","");
-        newAlumnoJson = newAlumnoJson.substring(12);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Alumno alumno = objectMapper.readValue(newAlumnoJson, Alumno.class);
+        newAlumnoJson = newAlumnoJson.replace("processJson=","");
+        Gson g = new Gson();
+        Alumno alumno = g.fromJson(newAlumnoJson, Alumno.class);
         Alumno alumnoAdded = alumnoService.addAlumno(alumno);
 
         return new ResponseEntity<>(alumnoAdded.getId(), HttpStatus.OK);
